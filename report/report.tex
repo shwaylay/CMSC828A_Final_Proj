@@ -1,0 +1,314 @@
+% This must be in the first 5 lines to tell arXiv to use pdfLaTeX, which is strongly recommended.
+\pdfoutput=1
+% In particular, the hyperref package requires pdfLaTeX in order to break URLs across lines.
+
+\documentclass[10pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[final]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+\usepackage{graphicx}
+
+\graphicspath{{./figures/}}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{We are using 1 late day \\ Homework 1 \\ Repo link: \href{https://github.com/shwaylay/CMSC828A/tree/main/hw1}{https://github.com/shwaylay/CMSC828A/tree/main/hw1}}
+
+% Author information can be set in various styles:
+% For several authors from the same institution:
+\author{Michael Suehle \and Alex Straub \and Addison Waller \and Mikhail Krepets\\}
+% if the names do not fit well on one line use
+%         Author 1 \\ {\bf Author 2} \\ ... \\ {\bf Author n} \\
+% For authors from different institutions:
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \And  ... \And
+%         Author n \\ Address line \\ ... \\ Address line}
+% To start a separate ``row'' of authors use \AND, as in
+% \author{Author 1 \\ Address line \\  ... \\ Address line
+%         \AND
+%         Author 2 \\ Address line \\ ... \\ Address line \And
+%         Author 3 \\ Address line \\ ... \\ Address line}
+
+% \author{Michael Suehle \\
+%   Affiliation / Address line 1 \\
+%   Affiliation / Address line 2 \\
+%   Affiliation / Address line 3 \\
+%   \texttt{email@domain} \\\And
+%   Second Author \\
+%   Affiliation / Address line 1 \\
+%   Affiliation / Address line 2 \\
+%   Affiliation / Address line 3 \\
+%   \texttt{email@domain} \\}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% SECTION 1: TRANSFER LEARNING
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Transfer Learning}
+
+\subsection{Background}
+
+For this task we had to create 3 different models. 
+The first model was a zero-shot transfer baseline which was a 
+BERT pretrained model. We fine-tuned this model on only the 
+source data and then evaluated it against both the test
+dataset and 50\% of the validation dataset. The second 
+model we created for this task was taking the first model 
+and fine-tuning it further on 10\% of the target dataset. 
+Then evaluating it on the test dataset and the other 50\% 
+of the validation dataset. These first two models were 
+domain adaptation approaches. The third and final model 
+was a task adaptation approach. This model was first 
+fine-tuned on the MRC dataset and later fine-tuned on the
+MNLI dataset. We also evaluated this model on the test and
+validation datasets. To give ourselves a good understanding 
+of the overall improvement of the models we also calculated 
+the LEEP score and accuracy for the baseline BERT model. 
+
+\subsection{Analysis}
+
+Our final evaluation data for all models can be seen in Table 
+\ref{table:green} below. First glance at the table shows that the BERT 
+baseline had a much lower accuracy score than all the other 
+models. This was expected and proves that any fine-tuning on 
+the BERT model will improve its results. Initial Source and 
+Source + Target are both domain adaptation approaches where 
+MNLI with MRC Backbone is a task adaptation approach, as 
+mentioned above. By the results in Table \ref{table:green} it is clear to 
+see that the domain adaptation approach has a higher degree 
+of transferability than the task adaptation approach. 
+
+\begin{table}[h]
+  \centering
+  \caption{This table shows the test and validation accuracies for the four models created in Task 1}
+  \label{table:green}
+\end{table}
+
+One evaluation metric we focused on was LEEP score. A LEEP 
+score measures the transferability of representations that 
+were learned by a classifier. As you can see in Table \ref{table:purple}, 
+we calculated the LEEP score for each model on the test and validation 
+datasets. When looking at this table you see a similar trend 
+to Table \ref{table:green}. Baseline has the lowest LEEP 
+score, MNLI with MRC Backbone is in the middle, and Initial 
+Source and Source + Target are the highest while also having 
+almost exactly the same score. This shows that LEEP score 
+does correlate with the target task’s validation accuracy 
+after transfer learning and can be used to predict transfer 
+learning performance. This can also be seen in the two 
+graphs Figure \ref{fig:1} and Figure \ref{fig:2}. These are 
+each scatter plots of either test or validation where the 
+accuracy is compared to the LEEP score. The two domain 
+adaptation approaches end up near the top of the graphs 
+showing how LEEP score correlates with the validation and 
+test accuracy. One piece of information that can be gleaned from 
+validation accuracy but not LEEP score is if a model is underfitting.
+A low validation score can indicate that but a LEEP score high or low 
+is not an direct indicator. On the other hand a LEEP score can provide 
+information about a model’s uncertainty of its predictions where validation 
+accuracy can not determine that. If the LEEP score is high it has a higher 
+model confidence. 
+
+
+\begin{table}[h]
+  \centering
+  \caption{This table shows the test and validation LEEP scores for the four models created in Task}
+  \label{table:purple}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \caption{A graph showing the correlation between the test accuracy and the LEEP score of a model}
+  \label{fig:1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \caption{A graph showing the correlation between the validation accuracy and the LEEP score of a model}
+  \label{fig:2}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% SECTION 2: MULTI-TASK LEARNING
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Multi-Task Learning}
+
+\subsection{Background}
+For Task 2 we created an encoder model that is able to 
+predict a multi-class label for each token. This way the 
+model is able to predict which type a token applies to and 
+allows it to be used for multi-task learning. We focused on 
+training a model in seven different ways that use a variety 
+of approaches and weights.
+
+\subsection{Analysis}
+On the first iteration of this task we selected 50,000 
+samples to start. The results received from this experiment 
+can be seen in Table \ref{table:yellow}, Figure \ref{fig:3}, 
+and Figure \ref{fig:4}. The results received did not have 
+any variation between the tasks so to further explore this we ran an 
+experiment using 200 samples. These results can be seen in 
+Table \ref{table:red}, Figure \ref{fig:5}, and Figure \ref{fig:6}. 
+Looking at the radar plot created for our first experiment, 
+Figure \ref{fig:3}, with 50,000 samples it can be observed 
+that both the NLI and NER tasks did not see almost any 
+change in accuracy between the different models. Instead, 
+the radar plot for our second experiment, Figure \ref{fig:5}, 
+with 200 samples shows more variation. This can also be seen 
+by the scatter plot for this experiment, Figure \ref{fig:6}, 
+because the NLI dynamic weight is nowhere near the 
+regression line. The second experiment shows that 
+changing the dynamic weights for the NLI task allows 
+for much higher accuracy unlike the static weights 
+which had consistent accuracy rates.   
+
+\begin{table}
+  \centering
+  \caption{This is a table displaying the NLI and NER accuracy calculations across the seven different models while using 50,000 samples}
+  \label{table:yellow}
+\end{table}
+
+\begin{figure}
+  \centering
+  \caption{This is a radar graph showing the different accuracies between the NLI and NER tasks on the seven different ways the model was trained using 50,000 samples}
+  \label{fig:3}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \caption{This is a scatter plot that shows the relationship between the NLI and the NER task accuracy for each way training of the model using 50,000 samples}
+  \label{fig:4}
+\end{figure}
+
+\begin{table}
+  \centering
+  \caption{This is a table displaying the NLI and NER accuracy calculations across the seven different models while using 200 samples}
+  \label{table:red}
+\end{table}
+
+\begin{figure}
+  \centering
+  \caption{This is a radar graph showing the different accuracies between the NLI and NER tasks on all of the models created}
+  \label{fig:5}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \caption{This is a scatter plot that shows the relationship between the NLI and the NER task accuracy for each way training of the model using 200 samples}
+  \label{fig:6}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% SECTION 3: ALTERNATIVE TRANSFERABILITY METRICS
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Alternative Transferability Metrics}
+
+\subsection{Background}
+For this task we first created two models both implementing supervised fine-tuning with LoRA 
+(freezing the rest of gpt2-large). The first model was fine-tuned solely on the source task while the second model 
+was fine-tuned on the source task and the validation of the target task. For the second part of this task we utilize 
+a gpt2-large model with three exemplars injected into its prompts for in-context learning. We compare results between 
+the different models, and present our findings.
+
+\subsection{Analysis}
+
+The first model mentioned above states that it was solely fine-tuned on the source task and then evaluated on the 
+target task. The average accuracy across all target tasks for each source task can be seen in Table \ref{table:5}. 
+As can be observed from this table, high\_school\_biology had the best performance on the target-test. This is likely 
+due to the fact that so many of our tasks are school topics and relate to medicine. It can also be seen that 
+world\_religions had the worst performance for the target-task. The second model involved fine-tuning on the 
+source task + the validation set of the target task, and was evaluated on the test set of the target task. 
+The accuracy of each (source, target) pair is located in Table 6. We found interesting behavior here. Regardless 
+of the source fine tuning set, we see the same accuracy on target test data when fine tuning on a given target 
+validation set. After extensive debugging, we could not find any implementation errors, and therefore attribute 
+this lack of variation to GPT2-Large’s performance\\
+
+For in-context learning, we use a non-fine-tuned gpt2-large model with prompts injected with exemplars from the 
+source data. The results for this third model can be viewed in Table 7 where it shows the same best and worst task for 
+context learning. \\
+
+When comparing our results to the baseline it can be seen that we were not able to gain much transferability from training 
+the models on either the source task, source task + validation set of target task, or in-context learning. An example of 
+this can be seen in Table 8 where most of the numbers are almost 0 or negative for overall accuracy for both the source 
+task and in-context learning. Similar results occurred for the source task + validation test of target task. All eight 
+tasks have the same accuracy gain signs between SFT and ICL. When computing the Peasron, Spearman, and Kendall’s 
+correlation for the two accuracy gains we observed that they were all 0 except for the task college\_computer\_science which 
+has a Pearson correlation of -0.22016804419356945 and p-value of 0.6003314400322237, Spearman correlation of 
+-0.22086305214969307 and p-value of 0.5991519546536616, and a Kendall’s correlation of -0.19611613513818404 and p-value of 
+0.5589857268413584. While these results weren’t 0 they were not statistically significant because the p-value for each is 
+greater than any reasonable value for alpha (which is typically 0.1, 0.05, 0.01, …). Interestingly, we see that both SFT 
+and ICL helped in only 2 of the 8 categories. This suggests that the transferability of both SFT and ICL is marginal.
+
+\begin{table}
+  \centering
+  \caption{Overall accuracy for all the tasks when only fine-tuned on the source task and evaluated on the test set target task}
+  \label{table:5}
+\end{table}
+
+We wanted to include the Table \ref{table:9} since it seems to suggest that biology, medicine, and formal logic transfer well to 
+computer science, but other subjects don’t seem to transfer well to astronomy.
+
+\subsection{Extra Credit}
+
+In-context learning can be used for estimating transferability by switching the context and the questions around to see
+ how transferable data is between subjects. The experiment set up would start with providing context for a task and then 
+ evaluating that model on every other task. We would do this providing context for each task individually. Performance
+  from this experiment could provide insight on how transferable context from differing tasks are. For example, we could 
+  provide context for computer science and then ask a question about biology and see how well the model performs.This 
+  is supported by SFT and ICL both increasing overall accuracies for college\_medicine and high\_school\_biology,
+   suggesting that these categories have high transferability.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% SECTION 4: Contributions
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Contributions}
+\begin{itemize}
+  \item Michael did half of the implementation for 1, all of the implementation for 2,  helped Alex debug code, and transferred the report from the google doc to the latex file.
+  \item Alex did half of the implementation for 1, most of the implementation for 3, and helped debug Michael's code.
+  \item Addison wrote up the report, generated the visualizations, started the implementation for 3, and helped Michael and Alex debug code
+  \item Mikhail did not contribute to the code, analysis, nor the report. 
+  \\See figure \ref{figure:contrib} for the github contributions.
+\end{itemize}
+
+\end{document}
