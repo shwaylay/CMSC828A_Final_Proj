@@ -1,0 +1,49 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import torch
+from src.chronos import ChronosPipeline
+import time
+
+class ChronosRunner:
+    def __init__(self, model="amazon/chronos-t5-small", device_map="cuda"):
+        self.pipeline = ChronosPipeline.from_pretrained(
+            model,
+            device_map = device_map,
+            torch_dtype = torch.bfloat16,
+        )
+
+    def evaluate(self, df, col, prediction_length=30, num_samples=20, 
+                 temperature=1.0, top_k=50, top_p=1.0, make_plot=True):
+        context = torch.tensor(df[col].iloc[:-prediction_length])
+        forcast = self.pipeline.predict(
+            context,
+            prediction_length,
+            num_samples=num_samples,
+            temperature=temperature,
+            top_k=top_k,
+            top_p=top_p,
+        )
+
+        low, median, high = np.quantile(forcast[0].numpy(), [0.1, 0.5, 0.9], axis=0)
+        # loss is RMSE
+        lloss = np.sqrt(np.sum(np.square(np.array(df[col].iloc[-prediction_length:]) - np.array(low))) / prediction_length)
+        mloss = np.sqrt(np.sum(np.square(np.array(df[col].iloc[-prediction_length:]) - np.array(median))) / prediction_length)
+        hloss = np.sqrt(np.sum(np.square(np.array(df[col].iloc[-prediction_length:]) - np.array(high))) / prediction_length)
+
+        if make_plot:
+            curr_time = str(
+                time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(round(time.time())))
+            )
+            forecast_index = range(len(df.iloc[:-prediction_length]), len(df.iloc[:-prediction_length]) + prediction_length)
+            plt.figure(figsize=(8, 4))
+            plt.plot(df[col], color="royalblue", label="historical data")
+            plt.plot(forecast_index, median, color="tomato", label="median forecast")
+            plt.fill_between(forecast_index, low, high, color="tomato", alpha=0.3, label="80% prediction interval")
+            plt.legend()
+            plt.grid()
+            plt.savefig(f"{curr_time}_chronos_plot.png")
+
+        return [lloss, mloss, hloss]
+
+        
