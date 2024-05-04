@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
+import sys
+sys.path.append("chronos_forecasting")
 from src.chronos import ChronosPipeline
 import time
 
@@ -46,6 +48,13 @@ class ChronosRunner:
             plt.grid()
             plt.savefig(f"{label_col}_chronos_plot_{curr_time}.png")
 
-        return [lloss, mloss, hloss]
+        return dict(
+            lloss=lloss, 
+            mloss=mloss, 
+            hloss=hloss,
+            labels=np.array(df[label_col].iloc[-prediction_length:]),
+            low=np.array(low),
+            median=np.array(median),
+            high=np.array(high))
 
         
