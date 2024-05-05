@@ -15,17 +15,15 @@ class ChronosRunner:
             torch_dtype = torch.bfloat16,
         )
 
-    # NOTE: only works on batch size of 1 for now
-    def evaluate(self, input_vals, label_vals=None, prediction_length=30, num_samples=20, 
+    # TODO: make a version of evaluate that uses a dataloader
+    def evaluate(self, data_loader):
+        raise NotImplementedError
+
+    def evaluate_step(self, input_vals, label_vals=None, prediction_length=30, num_samples=20, 
                  temperature=1.0, top_k=50, top_p=1.0, make_plot=True):
         
         if label_vals == None:
             label_vals = input_vals
-
-        input_vals = input_vals[0]
-        label_vals = label_vals[0]
-        # print(input_vals)
-        # print(label_vals)
         
         context = input_vals[:-prediction_length]
         forcast = self.pipeline.predict(
