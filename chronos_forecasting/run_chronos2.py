@@ -15,27 +15,48 @@ class ChronosRunner:
             torch_dtype = torch.bfloat16,
         )
 
-    # TODO: make a version of evaluate that uses a dataloader
-    def evaluate(self, data_loader):
-        raise NotImplementedError
+    def evaluate(self, src_input, target_input, make_plot=False):
+        batches = zip(src_input, target_input)
+        llosses = []
+        mlosses = []
+        hlosses = []
+        labels = []
+        medians = []
+        for src_sample, target_sample in batches:
+            results = self.evaluate_step(src_sample[0], target_sample[0], make_plot=make_plot)
+            llosses.append(results['lloss'])
+            mlosses.append(results['mloss'])
+            hlosses.append(results['hloss'])
+            labels.append(results['labels'])
+            medians.append(results['median'])
+
+        return dict(
+            lloss = np.array(llosses).mean(),
+            mloss = np.array(mlosses).mean(),
+            hloss = np.array(hlosses).mean(),
+            labels = torch.tensor(np.array(labels), requires_grad=True),
+            median = torch.tensor(np.array(medians), requires_grad=True)
+        )
 
     def evaluate_step(self, input_vals, label_vals=None, prediction_length=30, num_samples=20, 
                  temperature=1.0, top_k=50, top_p=1.0, make_plot=True):
         
         if label_vals == None:
             label_vals = input_vals
+
+        input_vals.to('cpu')
+        label_vals.to('cpu')
         
         context = input_vals[:-prediction_length]
-        forcast = self.pipeline.predict(
-            context,
+        forecast = self.pipeline.predict(
+            context.to("cpu"),
             prediction_length,
             num_samples=num_samples,
             temperature=temperature,
             top_k=top_k,
             top_p=top_p,
         )
-
-        low, median, high = np.quantile(forcast[0].numpy(), [0.1, 0.5, 0.9], axis=0)
+        low, median, high = np.quantile(forecast[0].detach().numpy(), [0.1, 0.5, 0.9], axis=0)
         # loss is MSE
         lloss = np.sum(np.square(np.array(label_vals[-prediction_length:]) - np.array(low))) / prediction_length
         mloss = np.sum(np.square(np.array(label_vals[-prediction_length:]) - np.array(median))) / prediction_length
