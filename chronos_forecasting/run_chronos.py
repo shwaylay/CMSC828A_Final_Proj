@@ -30,10 +30,10 @@ class ChronosRunner:
         )
 
         low, median, high = np.quantile(forcast[0].numpy(), [0.1, 0.5, 0.9], axis=0)
-        # loss is RMSE
-        lloss = np.sqrt(np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(low))) / prediction_length)
-        mloss = np.sqrt(np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(median))) / prediction_length)
-        hloss = np.sqrt(np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(high))) / prediction_length)
+        # loss is MSE
+        lloss = np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(low))) / prediction_length
+        mloss = np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(median))) / prediction_length
+        hloss = np.sum(np.square(np.array(df[label_col].iloc[-prediction_length:]) - np.array(high))) / prediction_length
 
         if make_plot:
             curr_time = str(
