@@ -73,6 +73,8 @@ for symbol in layoffs['Symbol'].unique():
             continue
         else:
             df = pdr.get_data_yahoo(symbol, start=start_date, end=end_date)
+            if df.empty:
+                break
             df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
             df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
             df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
