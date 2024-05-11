@@ -2,6 +2,8 @@ from pandas_datareader import data as pdr
 import yfinance as yf
 import pandas as pd
 import os
+import numpy as np
+import sys
 
 from random import randrange
 from datetime import timedelta
@@ -22,11 +24,12 @@ layoffs = pd.read_csv(r"tech_layoffs_CLEANED_NoNA.csv", parse_dates=["Date_layof
 
 
 yf.pdr_override()
-target_length = 120
+target_length = 90
 earliest_layoff = layoffs["Date_layoffs"].min()
 latest_layoff = layoffs["Date_layoffs"].max()
 
 for symbol in layoffs['Symbol'].unique():
+    print(symbol)
     temp = layoffs.loc[layoffs['Symbol']==symbol]
     layoff_dates = [earliest_layoff]
     
@@ -40,17 +43,25 @@ for symbol in layoffs['Symbol'].unique():
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        start_date = row['Date_layoffs'] - pd.Timedelta(days=90)
-        end_date = row['Date_layoffs'] + pd.Timedelta(days=90)
+        start_date = row['Date_layoffs'] - pd.Timedelta(days=45)
+        end_date = row['Date_layoffs'] + pd.Timedelta(days=45)
 
         df = pdr.get_data_yahoo(symbol, start=start_date, end=end_date)
+        if df.empty:
+            break
+                
+        idx = pd.date_range(start_date, end_date) # fill in missing dates
+        df = df.reindex(idx, fill_value=np.nan)
+        df["Open"] = df['Open'].interpolate()
+
         df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
         df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
         df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
 
+
         if len(df) >= target_length:
             df.reset_index().iloc[:target_length].to_csv(directory + f"\\{symbol}{i}.csv")
-    
+
     layoff_dates.append(latest_layoff)
     # pull stocks during 180 day periods without layoffs
     max_non_layoff_periods = len(temp) # want same number periods without layoffs as periods with
@@ -62,7 +73,7 @@ for symbol in layoffs['Symbol'].unique():
 
     other_count = 0
     while num_periods < max_non_layoff_periods:
-        if other_count > 10000000:
+        if other_count > 1000:
             print('took too long')
             break
         other_count += 1
@@ -75,10 +86,14 @@ for symbol in layoffs['Symbol'].unique():
             df = pdr.get_data_yahoo(symbol, start=start_date, end=end_date)
             if df.empty:
                 break
+            idx = pd.date_range(start_date, end_date) # fill in missing dates
+            df = df.reindex(idx, fill_value=np.nan)
+            df["Open"] = df['Open'].interpolate()
+
             df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
             df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
             df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
-        
+
             if len(df) >= target_length:
                 df.reset_index().iloc[:target_length].to_csv(directory + f"\\{symbol}{num_periods}.csv")
                 num_periods += 1
