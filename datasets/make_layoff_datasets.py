@@ -14,9 +14,9 @@ def random_date(start, end):
     objects.
     """
     delta = end - start
-    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = randrange(int_delta)
-    return start + timedelta(seconds=random_second)
+    day_delta = delta.days
+    random_day = randrange(day_delta)
+    return start + timedelta(days=random_day)
 
 
 
@@ -50,10 +50,9 @@ for symbol in layoffs['Symbol'].unique():
         if df.empty:
             break
                 
-        idx = pd.date_range(start_date, end_date) # fill in missing dates
-        df = df.reindex(idx, fill_value=np.nan)
-        df["Open"] = df['Open'].interpolate()
-
+        idx = pd.date_range(start_date, end_date, freq='D', inclusive='both') # fill in missing dates
+        df = df.reindex(idx)
+        df["Open"] = df['Open'].interpolate(limit_direction='both')
         df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
         df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
         df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
@@ -78,18 +77,17 @@ for symbol in layoffs['Symbol'].unique():
             break
         other_count += 1
         rand_start_date = random_date(earliest_layoff, latest_layoff)
-        rand_end_date = rand_start_date + pd.Timedelta(days=180)
+        rand_end_date = rand_start_date + pd.Timedelta(days=90)
 
         if any([rand_start_date < x < rand_end_date for x in layoff_dates[1:-1]]):
             continue
         else:
-            df = pdr.get_data_yahoo(symbol, start=start_date, end=end_date)
+            df = pdr.get_data_yahoo(symbol, start=rand_start_date, end=rand_end_date)
             if df.empty:
                 break
-            idx = pd.date_range(start_date, end_date) # fill in missing dates
-            df = df.reindex(idx, fill_value=np.nan)
-            df["Open"] = df['Open'].interpolate()
-
+            idx = pd.date_range(rand_start_date, rand_end_date, freq='D', inclusive='both') # fill in missing dates
+            df = df.reindex(idx)
+            df["Open"] = df['Open'].interpolate(limit_direction='both')
             df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
             df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
             df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
