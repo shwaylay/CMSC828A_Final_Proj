@@ -1,0 +1,8 @@
+\begin{thebibliography}{1}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Ansari et~al.(2024)Ansari, Stella, Turkmen, Zhang, Mercado, Shen, Shchur, Rangapuram, Arango, Kapoor, Zschiegner, Maddix, Wang, Mahoney, Torkkola, Wilson, Bohlke-Schneider, and Wang}]{chronos}
+Abdul~Fatir Ansari, Lorenzo Stella, Caner Turkmen, Xiyuan Zhang, Pedro Mercado, Huibin Shen, Oleksandr Shchur, Syama~Sundar Rangapuram, Sebastian~Pineda Arango, Shubham Kapoor, Jasper Zschiegner, Danielle~C. Maddix, Hao Wang, Michael~W. Mahoney, Kari Torkkola, Andrew~Gordon Wilson, Michael Bohlke-Schneider, and Yuyang Wang. 2024.
+\newblock \href {http://arxiv.org/abs/2403.07815} {Chronos: Learning the language of time series}.
+
+\end{thebibliography}
