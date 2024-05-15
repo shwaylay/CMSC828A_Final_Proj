@@ -1,8 +1,43 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{9}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{Ansari et~al.(2024)Ansari, Stella, Turkmen, Zhang, Mercado, Shen, Shchur, Rangapuram, Arango, Kapoor, Zschiegner, Maddix, Wang, Mahoney, Torkkola, Wilson, Bohlke-Schneider, and Wang}]{chronos}
 Abdul~Fatir Ansari, Lorenzo Stella, Caner Turkmen, Xiyuan Zhang, Pedro Mercado, Huibin Shen, Oleksandr Shchur, Syama~Sundar Rangapuram, Sebastian~Pineda Arango, Shubham Kapoor, Jasper Zschiegner, Danielle~C. Maddix, Hao Wang, Michael~W. Mahoney, Kari Torkkola, Andrew~Gordon Wilson, Michael Bohlke-Schneider, and Yuyang Wang. 2024.
 \newblock \href {http://arxiv.org/abs/2403.07815} {Chronos: Learning the language of time series}.
+
+\bibitem[{Ayyappa and Kumar(2024)}]{stocks-news-politics-for-stocks}
+Yalanati Ayyappa and A.P.~Siva Kumar. 2024.
+\newblock \href {https://link.springer.com/article/10.1007/s11042-024-18610-4} {Stock market prediction with political data analysis (sp-pda) model for handling big data}.
+\newblock \emph{Springer}.
+
+\bibitem[{Brownlee(2021)}]{data-transform-bagging}
+Jason Brownlee. 2021.
+\newblock \href {https://machinelearningmastery.com/bagging-ensemble-with-different-data-transformations/} {Develop a bagging ensemble with different data transformations}.
+
+\bibitem[{Cai et~al.(2020)Cai, Chen, Li, Chen, Zhang, Ye, Li, Yang, and Zhang}]{domain-adaptation-structure-alignment}
+Ruichu Cai, Jiawei Chen, Zijian Li, Wei Chen, Keli Zhang, Junjian Ye, Zhuozhang Li, Xiaoyan Yang, and Zhenjie Zhang. 2020.
+\newblock \href {https://ojs.aaai.org/index.php/AAAI/article/view/16846/16653} {Time series domain adaptation via sparse associative structure alignment}.
+
+\bibitem[{He et~al.(2023)He, Queen, Koker, Cuevas, Tsiligkaridis, and Zitnik}]{raincoat}
+Huan He, Owen Queen, Teddy Koker, Consuelo Cuevas, Theodoros Tsiligkaridis, and Marinka Zitnik. 2023.
+\newblock \href {http://arxiv.org/abs/2302.03133} {Domain adaptation for time series under feature and label shifts}.
+
+\bibitem[{Herold(2024)}]{layoff-dataset}
+Ulrike Herold. 2024.
+\newblock \href {https://www.kaggle.com/datasets/ulrikeherold/tech-layoffs-2020-2024} {Tech layoffs 2020-2024}.
+
+\bibitem[{Jin et~al.(2022)Jin, Park, Maddix, Wang, and Wang}]{domain-adaptation-attention-sharing}
+Xiaoyong Jin, Youngsuk Park, Danielle~C. Maddix, Hao Wang, and Yuyang Wang. 2022.
+\newblock \href {http://arxiv.org/abs/2102.06828v9} {Domain adaptation for time series forecasting via attention sharing}.
+
+\bibitem[{Liao et~al.(2024)Liao, Huang, and Tang}]{sentiment-analysis-in-stocks}
+Honglin Liao, Jiacheng Huang, and Yong Tang. 2024.
+\newblock \href {https://peerj.com/articles/cs-1969/} {Leet: stock market forecast with long-term emotional change enhanced temporal model}.
+\newblock \emph{PeerJ Computer Science}.
+
+\bibitem[{Prakash and Sakthivel(2024)}]{predicting-layoffs}
+P.~Prakash and V.~Sakthivel. 2024.
+\newblock \href {https://link.springer.com/chapter/10.1007/978-981-99-7137-4_53} {Layoffs analysis and prediction using machine learning algorithms}.
+\newblock \emph{Springer}.
 
 \end{thebibliography}
