@@ -56,7 +56,7 @@ class ChronosRunner:
             top_k=top_k,
             top_p=top_p,
         )
-        low, median, high = np.quantile(forecast[0].detach().numpy(), [0.1, 0.5, 0.9], axis=0)
+        low, median, high = np.quantile(forecast[0].detach().to("cpu").numpy(), [0.1, 0.5, 0.9], axis=0)
         # loss is MSE
         lloss = np.sum(np.square(np.array(label_vals[-prediction_length:]) - np.array(low))) / prediction_length
         mloss = np.sum(np.square(np.array(label_vals[-prediction_length:]) - np.array(median))) / prediction_length

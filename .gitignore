@@ -2,3 +2,6 @@
 *.log
 *.out
 *.gz
+archive/*
+env/*
+chronos_forecasting/*
