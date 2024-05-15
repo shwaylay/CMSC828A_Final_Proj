@@ -56,7 +56,11 @@ for symbol in layoffs['Symbol'].unique():
         df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
         df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
         df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
-
+        avg = list(df['Open'].rolling(window=90).mean())[-1]
+        df['Normalized_Price_SMA90'] = df['Open'] / avg
+        rolling_min = list(df['Open'].rolling(window=90).min())[-1]
+        rolling_max = list(df['Open'].rolling(window=90).max())[-1]
+        df['Scaled_Price_MinMax'] = (df["Open"] - rolling_min) / (rolling_max - rolling_min)
 
         if len(df) >= target_length:
             df.reset_index().iloc[:target_length].to_csv(directory + f"\\{symbol}{i}.csv")
@@ -91,7 +95,11 @@ for symbol in layoffs['Symbol'].unique():
             df['open_percent_change'] = ((df["Open"].shift(-1) - df['Open']) / df['Open'].shift(-1))
             df['open_inproportion_to_average'] = ((df['Open']- df["Open"].mean()) / df['Open'].mean())
             df['open_normalized'] = ((df['Open']- df["Open"].mean()) / df['Open'].std())
-
+            avg = list(df['Open'].rolling(window=90).mean())[-1]
+            df['Normalized_Price_SMA90'] = df['Open'] / avg
+            rolling_min = list(df['Open'].rolling(window=90).min())[-1]
+            rolling_max = list(df['Open'].rolling(window=90).max())[-1]
+            df['Scaled_Price_MinMax'] = (df["Open"] - rolling_min) / (rolling_max - rolling_min)
             if len(df) >= target_length:
                 df.reset_index().iloc[:target_length].to_csv(directory + f"\\{symbol}{num_periods}.csv")
                 num_periods += 1
